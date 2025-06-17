@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -26,13 +27,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+        <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
             <body className="min-h-screen bg-background font-sans antialiased">
-                <div className="relative flex min-h-screen flex-col">
-                    <Header />
-                    <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
-                    <Footer />
-                </div>
+                <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                    <div className="relative flex min-h-screen flex-col">
+                        <Header />
+                        <main className="flex-1 container mx-auto px-4 py-8">{children}</main>
+                        <Footer />
+                    </div>
+                </ThemeProvider>
             </body>
         </html>
     );
