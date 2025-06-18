@@ -1,8 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import Checkout from "@/components/checkout";
 
 export default function HomePage() {
     return (
@@ -14,19 +15,8 @@ export default function HomePage() {
                         <Button size="lg">Give Me a Dollar</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Give Me a Dollar</DialogTitle>
-                        </DialogHeader>
-                        <DialogDescription>Give me a dollar.</DialogDescription>
-                        <DialogFooter>
-                            <DialogFooter className="sm:justify-start">
-                                <DialogClose asChild>
-                                    <Button type="button" variant="secondary">
-                                        Close
-                                    </Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogFooter>
+                        <DialogTitle>Give me A Dollar</DialogTitle>
+                        <Checkout />
                     </DialogContent>
                 </Dialog>
             </main>
