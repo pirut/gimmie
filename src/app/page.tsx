@@ -15,7 +15,7 @@ export default function HomePage() {
                         <Button size="lg">Give Me a Dollar</Button>
                     </DialogTrigger>
                     <DialogContent>
-                        <DialogTitle>Give me A Dollar</DialogTitle>
+                        <DialogTitle>Throw me A Bone</DialogTitle>
                         <Checkout />
                     </DialogContent>
                 </Dialog>
