@@ -27,19 +27,9 @@ export function Header() {
             </NavigationMenu>
             <div className="flex gap-4">
                 <SignedOut>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger>
-                            <Button>Login</Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                            <DropdownMenuItem className="flex m-0 p-0 justify-center">
-                                <SignInButton />
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="flex m-0 p-0 justify-center">
-                                <SignUpButton />
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    <SignInButton>
+                        <Button variant="outline">Login</Button>
+                    </SignInButton>
                 </SignedOut>
                 <SignedIn>
                     <UserButton />
