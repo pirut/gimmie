@@ -20,11 +20,11 @@ export default function Checkout() {
         <div
             id="checkout"
             style={{
-                height: "90vh",
-                overflow: "auto",
+                height: "75vh",
+                overflow: "scroll",
                 width: "100%",
                 maxWidth: "100%",
-                margin: "0 auto",
+                margin: "0",
             }}
         >
             <EmbeddedCheckoutProvider stripe={stripePromise} options={{ fetchClientSecret: fetchClientSecretWrapper }}>

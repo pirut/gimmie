@@ -14,7 +14,7 @@ export default function HomePage() {
                     <DialogTrigger asChild>
                         <Button size="lg">Give Me a Dollar</Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="max-h-full">
                         <DialogTitle>Throw me A Bone</DialogTitle>
                         <Checkout />
                     </DialogContent>

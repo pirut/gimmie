@@ -1,6 +1,7 @@
 // app/layout.tsx
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
@@ -40,14 +41,16 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
-            <body className="min-h-screen bg-background font-sans antialiased">
-                <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                    {children}
-                    <Analytics />
-                    <SpeedInsights />
-                </ThemeProvider>
-            </body>
-        </html>
+        <ClerkProvider>
+            <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+                <body className="min-h-screen bg-background font-sans antialiased">
+                    <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                        {children}
+                        <Analytics />
+                        <SpeedInsights />
+                    </ThemeProvider>
+                </body>
+            </html>
+        </ClerkProvider>
     );
 }
