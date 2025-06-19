@@ -1,6 +1,8 @@
 import { ModeToggle } from "./mode-toggle";
+import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "./ui/navigation-menu";
-import { SignIn, SignUp, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignIn, SignInButton, SignUp, SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export function Header() {
     return (
@@ -23,10 +25,21 @@ export function Header() {
                     </SignedIn>
                 </NavigationMenuList>
             </NavigationMenu>
-            <div className="flex items-center gap-4">
+            <div className="flex gap-4">
                 <SignedOut>
-                    <SignIn />
-                    <SignUp />
+                    <DropdownMenu>
+                        <DropdownMenuTrigger>
+                            <Button>Login</Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem className="flex m-0 p-0 justify-center">
+                                <SignInButton />
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="flex m-0 p-0 justify-center">
+                                <SignUpButton />
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </SignedOut>
                 <SignedIn>
                     <UserButton />
