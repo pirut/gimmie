@@ -4,12 +4,14 @@ import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Checkout from "@/components/checkout";
+import Dollars from "@/components/gifts";
 
 export default function HomePage() {
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-1 flex flex-col items-center justify-center p-4">
+                <Dollars />
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button size="lg">Give Me a Dollar</Button>

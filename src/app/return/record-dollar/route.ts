@@ -1,0 +1,37 @@
+import { NextRequest, NextResponse } from "next/server";
+import { init, id } from "@instantdb/admin";
+
+// Replace with your actual InstantDB app ID and admin token
+const APP_ID = process.env.NEXT_PUBLIC_INSTANTDB_PUBLISHABLE_KEY!;
+const ADMIN_TOKEN = process.env.INSTANTDB_SECRET_KEY!;
+
+const db = init({
+    appId: APP_ID,
+    adminToken: ADMIN_TOKEN,
+});
+
+export async function POST(req: NextRequest) {
+    try {
+        const body = await req.json();
+        console.log("Received body:", body);
+
+        const { userId, createdAt } = body;
+        if (!userId || !createdAt) {
+            console.error("Missing userId or createdAt");
+            return NextResponse.json({ error: "Missing userId or createdAt" }, { status: 400 });
+        }
+
+        // Write a new dollar record
+        const txResult = await db.transact([
+            db.tx.dollars[id()].update({
+                userId,
+                createdAt,
+            }),
+        ]);
+
+        return NextResponse.json({ success: true, txId: txResult["tx-id"] });
+    } catch (err) {
+        console.error("API route error:", err);
+        return NextResponse.json({ error: String(err) }, { status: 500 });
+    }
+}
