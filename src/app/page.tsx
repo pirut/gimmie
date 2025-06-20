@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import Checkout from "@/components/checkout";
 import Dollars from "@/components/gifts";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
 
 export default function HomePage() {
     return (
@@ -16,9 +17,24 @@ export default function HomePage() {
                     <DialogTrigger asChild>
                         <Button size="lg">Give Me a Dollar</Button>
                     </DialogTrigger>
-                    <DialogContent className="max-h-full">
-                        <DialogTitle>Throw me A Bone</DialogTitle>
-                        <Checkout />
+                    <DialogContent>
+                        <SignedIn>
+                            <DialogContent className="max-h-full">
+                                <DialogTitle>Throw me A Bone</DialogTitle>
+                                <Checkout />
+                            </DialogContent>
+                        </SignedIn>
+                        <SignedOut>
+                            <DialogTitle hidden>Sign Up</DialogTitle>
+                            <div className="flex justify-center justify-self-center gap-4 mt-2">
+                                <SignUpButton>
+                                    <Button variant="outline">Sign Up</Button>
+                                </SignUpButton>
+                                <SignInButton>
+                                    <Button variant="outline">Sign In</Button>
+                                </SignInButton>
+                            </div>
+                        </SignedOut>
                     </DialogContent>
                 </Dialog>
             </main>

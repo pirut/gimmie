@@ -1,7 +1,7 @@
 import { ModeToggle } from "./mode-toggle";
 import { Button } from "./ui/button";
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "./ui/navigation-menu";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export function Header() {
     return (
@@ -26,9 +26,9 @@ export function Header() {
             </NavigationMenu>
             <div className="flex gap-4">
                 <SignedOut>
-                    <SignInButton>
+                    <SignUpButton>
                         <Button variant="outline">Login</Button>
-                    </SignInButton>
+                    </SignUpButton>
                 </SignedOut>
                 <SignedIn>
                     <UserButton />
