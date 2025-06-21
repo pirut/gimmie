@@ -15,7 +15,7 @@ export default function Dollars() {
 
     return (
         <div className="mb-8 w-full max-w-md mx-auto bg-card p-4 rounded-lg border">
-            <h2 className="text-xl font-bold mb-2">Total Dollars Given: ${total}</h2>
+            <h2 className="text-xl font-bold mb-2">Total Dollars Given: {total}</h2>
             <ul className="divide-y divide-gray-200">
                 {dollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
                 {dollars.map((dollar) => (
