@@ -6,6 +6,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Suspense } from "react";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -45,7 +46,7 @@ export default function RootLayout({
             <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
                 <body className="min-h-screen bg-background font-sans antialiased">
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-                        {children}
+                        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
                         <Analytics />
                         <SpeedInsights />
                     </ThemeProvider>
