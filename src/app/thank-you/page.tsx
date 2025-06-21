@@ -37,47 +37,49 @@ export default function ThankYouPage() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8">
-            <Header></Header>
-            <h1 className="text-3xl font-bold mb-4">Thank you for your support!</h1>
-            <p className="mb-8 text-lg">Your dollar has been received. You rock!</p>
-            {shouldPrompt && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Choose a Display Name</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <form
-                                className="flex flex-col gap-6"
-                                onSubmit={(e) => {
-                                    e.preventDefault();
-                                    submitDisplayName();
-                                }}
-                            >
-                                <div className="flex flex-col gap-2">
-                                    <Label htmlFor="displayName">Display Name</Label>
-                                    <Input
-                                        id="displayName"
-                                        value={newDisplayName}
-                                        onChange={(e) => setNewDisplayName(e.target.value)}
-                                        placeholder="Enter display name"
-                                        type="text"
-                                        required
-                                        autoFocus
-                                    />
-                                </div>
-                                <CardFooter className="flex flex-col gap-2">
-                                    <Button type="submit" disabled={!newDisplayName}>
-                                        Save
-                                    </Button>
-                                </CardFooter>
-                            </form>
-                        </CardContent>
-                    </Card>
-                </div>
-            )}
-            <Dollars />
-        </div>
+        <>
+            <Header />
+            <div className="min-h-screen flex flex-col items-center justify-center p-8">
+                <h1 className="text-3xl font-bold mb-4">Thank you for your support!</h1>
+                <p className="mb-8 text-lg">Your dollar has been received. You rock!</p>
+                {shouldPrompt && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Choose a Display Name</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <form
+                                    className="flex flex-col gap-6"
+                                    onSubmit={(e) => {
+                                        e.preventDefault();
+                                        submitDisplayName();
+                                    }}
+                                >
+                                    <div className="flex flex-col gap-2">
+                                        <Label htmlFor="displayName">Display Name</Label>
+                                        <Input
+                                            id="displayName"
+                                            value={newDisplayName}
+                                            onChange={(e) => setNewDisplayName(e.target.value)}
+                                            placeholder="Enter display name"
+                                            type="text"
+                                            required
+                                            autoFocus
+                                        />
+                                    </div>
+                                    <CardFooter className="flex flex-col gap-2">
+                                        <Button type="submit" disabled={!newDisplayName}>
+                                            Save
+                                        </Button>
+                                    </CardFooter>
+                                </form>
+                            </CardContent>
+                        </Card>
+                    </div>
+                )}
+                <Dollars />
+            </div>
+        </>
     );
 }

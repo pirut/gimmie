@@ -11,6 +11,14 @@ const schema = i.schema({
             displayName: i.string(),
         }),
     },
+    rooms: {
+        chat: {
+            presence: i.entity({
+                name: i.string(),
+                status: i.string(),
+            }),
+        },
+    },
 });
 
 export default schema;

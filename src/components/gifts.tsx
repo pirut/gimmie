@@ -1,10 +1,8 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { db } from "@/lib/instantdb";
 
 export default function Dollars() {
-    const { user } = useUser();
     const { data, isLoading, error } = db.useQuery({ dollars: {}, displayNames: {} });
 
     if (isLoading) return <div>Loading dollars...</div>;
@@ -27,10 +25,7 @@ export default function Dollars() {
                 {dollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
                 {dollars.map((dollar) => (
                     <li key={dollar.id} className="py-2 flex justify-between text-sm">
-                        <span>
-                            $1 from{" "}
-                            {dollar.userId === user?.id ? displayNameMap[dollar.userId] || dollar.userId : displayNameMap[dollar.userId] || dollar.userId}
-                        </span>
+                        <span>$1 from {displayNameMap[dollar.userId] || "Anonymous"}</span>
                         <span className="text-xs text-gray-400">{new Date(dollar.createdAt).toLocaleString()}</span>
                     </li>
                 ))}

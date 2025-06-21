@@ -1,28 +1,31 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { db } from "@/lib/instantdb";
 import { id } from "@instantdb/react";
 
 type RecordDonationProps = {
-    customerEmail: string;
+    customerId: string;
 };
 
-export default function RecordDonation({ customerEmail }: RecordDonationProps) {
+export default function RecordDonation({ customerId }: RecordDonationProps) {
     const router = useRouter();
+    const hasRun = useRef(false);
 
     useEffect(() => {
-        if (customerEmail) {
+        if (hasRun.current) return;
+        hasRun.current = true;
+        if (customerId) {
             db.transact(
                 db.tx.dollars[id()].update({
-                    userId: customerEmail,
+                    userId: customerId,
                     createdAt: Date.now(),
                 })
             );
         }
         router.push("/thank-you");
-    }, [customerEmail, router]);
+    }, [customerId, router]);
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center">
