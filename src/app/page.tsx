@@ -19,13 +19,14 @@ export default function HomePage() {
                     </DialogTrigger>
                     <DialogContent>
                         <SignedIn>
+                            <DialogTitle>Throw me A Bone</DialogTitle>
                             <DialogContent className="max-h-full">
                                 <DialogTitle>Throw me A Bone</DialogTitle>
                                 <Checkout />
                             </DialogContent>
                         </SignedIn>
                         <SignedOut>
-                            <DialogTitle hidden>Sign Up</DialogTitle>
+                            <DialogTitle>You think i would take money from a stranger?</DialogTitle>
                             <div className="flex justify-center justify-self-center gap-4 mt-2">
                                 <SignUpButton>
                                     <Button variant="outline">Sign Up</Button>
