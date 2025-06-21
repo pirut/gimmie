@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { init, id } from "@instantdb/admin";
 
-// Replace with your actual InstantDB app ID and admin token
+// InstantDB app ID and admin token are loaded from environment variables
 const APP_ID = process.env.NEXT_PUBLIC_INSTANTDB_PUBLISHABLE_KEY!;
 const ADMIN_TOKEN = process.env.INSTANTDB_SECRET_KEY!;
 
