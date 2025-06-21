@@ -16,6 +16,8 @@ const schema = i.schema({
             presence: i.entity({
                 name: i.string(),
                 status: i.string(),
+                profileImageUrl: i.string(),
+                dollarsGiven: i.number(),
             }),
         },
     },
