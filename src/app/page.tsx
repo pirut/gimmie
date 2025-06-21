@@ -12,10 +12,10 @@ import { Cursors } from "@instantdb/react";
 export default function HomePage() {
     const room = db.room("chat", "main");
     return (
-        <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1 flex flex-col items-center justify-center p-4">
-                <Cursors room={room} className="w-full h-full" userCursorColor="tomato">
+        <Cursors room={room} className="min-w-full h-100vh" userCursorColor="tomato">
+            <div className="min-h-screen flex flex-col">
+                <Header />
+                <main className="flex-1 flex flex-col items-center justify-center p-4">
                     <Dollars />
                     <Dialog>
                         <DialogTrigger asChild>
@@ -42,9 +42,9 @@ export default function HomePage() {
                             </SignedOut>
                         </DialogContent>
                     </Dialog>
-                </Cursors>
-            </main>
-            <Footer />
-        </div>
+                </main>
+                <Footer />
+            </div>
+        </Cursors>
     );
 }
