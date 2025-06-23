@@ -32,9 +32,6 @@ export default function HomePage() {
         }
     }, [user, dollarsGiven, publishPresence]);
 
-    // Debug: log user on every render
-    console.log("User:", user);
-
     type Presence = {
         name: string;
         status: string;
