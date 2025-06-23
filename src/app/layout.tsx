@@ -31,7 +31,6 @@ export const metadata: Metadata = {
                 url: "/Dollar_Sign_White.svg",
                 media: "(prefers-color-scheme: dark)",
             },
-            { url: "/favicon.ico", media: "" },
         ],
     },
 };

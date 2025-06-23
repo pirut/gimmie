@@ -9,6 +9,7 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, useUser } from "@clerk
 import { db } from "@/lib/instantdb";
 import { Cursors } from "@instantdb/react";
 import { useEffect } from "react";
+import Image from "next/image";
 
 export default function HomePage() {
     const { user } = useUser();
@@ -30,6 +31,9 @@ export default function HomePage() {
             });
         }
     }, [user, dollarsGiven, publishPresence]);
+
+    // Debug: log user on every render
+    console.log("User:", user);
 
     type Presence = {
         name: string;
@@ -53,7 +57,7 @@ export default function HomePage() {
         // Use random color for others, tomato for self
         const dotColor = presence?.profileImageUrl ? getRandomColor(presence.profileImageUrl) : color;
         return (
-            <div style={{ position: "relative", width: 64, height: 64, pointerEvents: "none" }}>
+            <div style={{ position: "relative", width: 64, height: 64, pointerEvents: "none", zIndex: 0, opacity: 0.6 }}>
                 {/* Cursor dot with shadow and border */}
                 <div
                     style={{
@@ -72,19 +76,19 @@ export default function HomePage() {
                 />
                 {/* Profile image (top right, spaced out, with slight rotation) */}
                 {presence?.profileImageUrl && (
-                    <img
+                    <Image
                         src={presence.profileImageUrl}
                         alt="profile"
+                        width={32}
+                        height={32}
                         style={{
                             position: "absolute",
                             top: -10,
                             right: -10,
-                            width: 32,
-                            height: 32,
                             borderRadius: 16,
                             border: "2px solid #fff",
                             background: "#fff",
-                            zIndex: 2,
+                            zIndex: 1,
                             boxShadow: "0 2px 8px 0 rgba(0,0,0,0.12)",
                             transform: "rotate(-8deg) scale(1.05)",
                         }}
@@ -103,7 +107,7 @@ export default function HomePage() {
                             padding: "4px 12px",
                             fontSize: 15,
                             fontWeight: 700,
-                            zIndex: 2,
+                            zIndex: 1,
                             border: "2px solid #ffe066",
                             fontFamily: "JetBrains Mono, monospace",
                             boxShadow: "0 2px 8px 0 rgba(255,224,102,0.18)",
@@ -120,9 +124,9 @@ export default function HomePage() {
 
     return (
         <Cursors room={room} className="min-w-full h-100vh" userCursorColor="tomato" renderCursor={renderCursor}>
-            <div className="min-h-screen flex flex-col">
+            <div className="min-h-screen flex flex-col relative z-10">
                 <Header />
-                <main className="flex-1 flex flex-col items-center justify-center p-4">
+                <main className="flex-1 flex flex-col items-center justify-center p-4 relative z-10">
                     <Dollars />
                     <Dialog>
                         <DialogTrigger asChild>
