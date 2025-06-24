@@ -32,11 +32,6 @@ export const metadata: Metadata = {
                 media: "(prefers-color-scheme: dark)",
             },
         ],
-        apple: [
-            {
-                url: "/apple-touch-icon.png",
-            },
-        ],
     },
 };
 
