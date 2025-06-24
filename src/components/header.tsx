@@ -17,6 +17,9 @@ export function Header() {
                     <NavigationMenuItem>
                         <NavigationMenuLink href="/faq">FAQ</NavigationMenuLink>
                     </NavigationMenuItem>
+                    <NavigationMenuItem>
+                        <NavigationMenuLink href="/leaderboard">Leaderboard</NavigationMenuLink>
+                    </NavigationMenuItem>
                     <SignedIn>
                         <NavigationMenuItem>
                             <NavigationMenuLink href="/dashboard">Dashboard</NavigationMenuLink>
