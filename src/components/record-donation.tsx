@@ -21,6 +21,8 @@ export default function RecordDonation({ customerId }: RecordDonationProps) {
                 db.tx.dollars[id()].update({
                     userId: customerId,
                     createdAt: Date.now(),
+                    used: false,
+                    usedFor: "",
                 })
             );
         }

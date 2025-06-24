@@ -1,3 +1,5 @@
+// Docs: https://www.instantdb.com/docs/permissions
+
 import type { InstantRules } from "@instantdb/react";
 
 const rules = {
@@ -5,8 +7,8 @@ const rules = {
         allow: {
             view: "true",
             create: "true",
-            update: "true",
             delete: "true",
+            update: "true",
         },
     },
 } satisfies InstantRules;
