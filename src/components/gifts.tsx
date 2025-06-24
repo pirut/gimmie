@@ -1,5 +1,9 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import Checkout from "@/components/checkout";
 import { db } from "@/lib/instantdb";
 
 export default function Dollars() {
@@ -10,6 +14,10 @@ export default function Dollars() {
 
     const dollars = data?.dollars ?? [];
     const displayNames = data?.displayNames ?? [];
+
+    // Sort dollars by createdAt in descending order (latest first) and limit to 100
+    const sortedDollars = dollars.sort((a, b) => b.createdAt - a.createdAt).slice(0, 100);
+
     const total = dollars.length;
 
     // Map userId to displayName
@@ -20,16 +28,44 @@ export default function Dollars() {
 
     return (
         <div className="mb-8 w-full max-w-md mx-auto bg-card p-4 rounded-lg border">
-            <h2 className="text-xl font-bold mb-2">Total Dollars Given: {total}</h2>
+            <div className="flex flex-col items-center gap-4 mb-4">
+                <h2 className="text-xl font-bold">Total Dollars Given: {total}</h2>
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="lg">Give Me a Dollar</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <SignedIn>
+                            <DialogTitle>Throw me A Bone</DialogTitle>
+                            <DialogContent className="max-h-full">
+                                <DialogTitle>Throw me A Bone</DialogTitle>
+                                <Checkout />
+                            </DialogContent>
+                        </SignedIn>
+                        <SignedOut>
+                            <DialogTitle>You think i would take money from a stranger?</DialogTitle>
+                            <div className="flex justify-center justify-self-center gap-4 mt-2">
+                                <SignUpButton>
+                                    <Button variant="outline">Sign Up</Button>
+                                </SignUpButton>
+                                <SignInButton>
+                                    <Button variant="outline">Sign In</Button>
+                                </SignInButton>
+                            </div>
+                        </SignedOut>
+                    </DialogContent>
+                </Dialog>
+            </div>
             <ul className="divide-y divide-gray-200">
-                {dollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
-                {dollars.map((dollar) => (
+                {sortedDollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
+                {sortedDollars.map((dollar) => (
                     <li key={dollar.id} className="py-2 flex justify-between text-sm">
                         <span>$1 from {displayNameMap[dollar.userId] || "Anonymous"}</span>
                         <span className="text-xs text-gray-400">{new Date(dollar.createdAt).toLocaleString()}</span>
                     </li>
                 ))}
             </ul>
+            {dollars.length > 100 && <div className="text-center text-sm text-muted-foreground mt-2">Showing latest 100 of {total} dollars</div>}
         </div>
     );
 }

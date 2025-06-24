@@ -2,10 +2,12 @@
 
 import { db } from "@/lib/instantdb";
 import { Header } from "@/components/header";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter, CardDescription, CardAction } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Checkout from "@/components/checkout";
 
 // Types based on schema
@@ -68,111 +70,106 @@ export default function LeaderboardPage() {
             .slice(0, 100);
     }, [data?.dollars, displayNameMap]);
 
+    const getPlaceIcon = (index: number) => {
+        if (index === 0) return "🥇";
+        if (index === 1) return "🥈";
+        if (index === 2) return "🥉";
+        return null;
+    };
+
     return (
         <div className="min-h-screen flex flex-col">
             <Header />
             <main className="flex-1 flex flex-col items-center justify-center p-4">
-                <Card className="w-full max-w-2xl mx-auto shadow-xl border-2 border-yellow-300 bg-gradient-to-br from-yellow-50 via-white to-yellow-100 animate-in fade-in duration-700 relative">
-                    <CardAction className="absolute top-6 right-6 z-10">
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    What is this?
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>About the Leaderboard</DialogTitle>
-                                    <DialogDescription>
-                                        This leaderboard celebrates the top 100 people who have given a dollar on this site. The more dollars you give, the
-                                        higher you climb!
-                                    </DialogDescription>
-                                    <Card className="mt-4">
-                                        <CardContent className="flex flex-col gap-2 py-4">
-                                            <CardDescription>• Each $1 given counts as one point.</CardDescription>
-                                            <CardDescription>• Display names are shown if you set one.</CardDescription>
-                                            <CardDescription>• The top 3 are honored with special medals 🥇🥈🥉.</CardDescription>
-                                            <CardDescription>• Want to see your name here? Give a dollar!</CardDescription>
-                                        </CardContent>
-                                    </Card>
-                                </DialogHeader>
-                                <div className="flex justify-center mt-4">
-                                    <GiveDollarDialog trigger={<Button className="w-full max-w-xs">Give a Dollar</Button>} />
+                <div className="w-full max-w-2xl mx-auto space-y-4">
+                    <Card>
+                        <CardHeader className="pb-4">
+                            <CardTitle className="text-lg">About the Leaderboard</CardTitle>
+                            <CardDescription>
+                                This leaderboard celebrates the top 100 people who have given a dollar on this site. The more dollars you give, the higher you
+                                climb!
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-3 px-4">
+                            <div className="grid gap-1.5 text-sm">
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                    <span>Each $1 given counts as one point</span>
                                 </div>
-                            </DialogContent>
-                        </Dialog>
-                    </CardAction>
-                    <CardHeader className="flex flex-col items-center gap-2 pb-2">
-                        <CardTitle className="text-3xl font-extrabold flex items-center gap-2">🏆 Leaderboard</CardTitle>
-                        <CardDescription className="text-lg text-yellow-700 font-semibold tracking-wide">Top 100 Most Generous Givers</CardDescription>
-                        <CardDescription className="text-sm text-muted-foreground">Thank you for making this silly dream a reality!</CardDescription>
-                    </CardHeader>
-                    <CardContent className="overflow-x-auto px-0">
-                        {isLoading ? (
-                            <div className="text-center py-8 text-lg font-medium animate-pulse">Loading leaderboard...</div>
-                        ) : error ? (
-                            <div className="text-red-500 text-center py-8">Error: {error.message}</div>
-                        ) : leaderboard.length === 0 ? (
-                            <div className="text-muted-foreground text-center py-8">No donations yet.</div>
-                        ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left border-separate border-spacing-y-1 mt-2">
-                                    <thead>
-                                        <tr>
-                                            <th className="py-3 px-4 bg-yellow-200 rounded-l-lg text-lg font-bold text-yellow-900">#</th>
-                                            <th className="py-3 px-4 bg-yellow-200 text-lg font-bold text-yellow-900">Name</th>
-                                            <th className="py-3 px-4 bg-yellow-200 rounded-r-lg text-lg font-bold text-yellow-900">Total Dollars</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {leaderboard.map((entry, idx) => {
-                                            // Emoji for top 3
-                                            let placeIcon = null;
-                                            if (idx === 0) placeIcon = "🥇";
-                                            else if (idx === 1) placeIcon = "🥈";
-                                            else if (idx === 2) placeIcon = "🥉";
-                                            // Row highlight for top 1
-                                            const rowClass =
-                                                idx === 0
-                                                    ? "bg-yellow-100/90 font-extrabold text-yellow-900 shadow-lg animate-pulse"
-                                                    : idx % 2 === 0
-                                                    ? "bg-white/80"
-                                                    : "bg-yellow-50/80";
-                                            return (
-                                                <tr key={entry.userId} className={`transition-all duration-200 ${rowClass} hover:bg-yellow-200/70`}>
-                                                    <td className="py-2 px-4 text-xl font-bold text-center align-middle">
-                                                        {placeIcon ? (
-                                                            <span className="mr-1" title={`Place ${idx + 1}`}>
-                                                                {placeIcon}
-                                                            </span>
-                                                        ) : null}
-                                                        <span className="align-middle">{idx + 1}</span>
-                                                    </td>
-                                                    <td className="py-2 px-4 text-lg font-semibold align-middle">{entry.displayName}</td>
-                                                    <td className="py-2 px-4 text-lg font-mono align-middle">
-                                                        <span className="inline-block bg-yellow-300/60 rounded px-2 py-1 font-bold text-yellow-900 shadow-sm">
-                                                            ${entry.count}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                    <span>Display names are shown if you set one</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                    <span>The top 3 are honored with special medals 🥇🥈🥉</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                                    <span>Want to see your name here? Give a dollar!</span>
+                                </div>
                             </div>
-                        )}
-                    </CardContent>
-                    <CardFooter className="flex flex-col items-center gap-2 pt-4">
-                        <GiveDollarDialog
-                            trigger={
-                                <Button size="lg" className="w-full max-w-xs mx-auto">
-                                    Give a Dollar
-                                </Button>
-                            }
-                        />
-                        <span>Want to see your name here? Every dollar counts!</span>
-                    </CardFooter>
-                </Card>
+                            <br />
+                            <div className="flex justify-center pt-2">
+                                <GiveDollarDialog trigger={<Button size="lg">Give a Dollar</Button>} />
+                            </div>
+                        </CardContent>
+                    </Card>
+                    <Card>
+                        <CardHeader className="text-center pb-4">
+                            <CardTitle className="text-2xl font-bold">🏆 Leaderboard</CardTitle>
+                            <CardDescription>Top 100 Most Generous Givers</CardDescription>
+                        </CardHeader>
+                        <CardContent className="px-4">
+                            {isLoading ? (
+                                <div className="text-center py-8">
+                                    <div className="text-lg font-medium">Loading leaderboard...</div>
+                                </div>
+                            ) : error ? (
+                                <div className="text-center py-8">
+                                    <div className="text-destructive">Error: {error.message}</div>
+                                </div>
+                            ) : leaderboard.length === 0 ? (
+                                <div className="text-center py-8">
+                                    <div className="text-muted-foreground">No donations yet.</div>
+                                </div>
+                            ) : (
+                                <div className="rounded-md border">
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead className="w-16 text-center">Rank</TableHead>
+                                                <TableHead className="text-center">Name</TableHead>
+                                                <TableHead className="text-center w-24">Dollars</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {leaderboard.map((entry, idx) => {
+                                                const placeIcon = getPlaceIcon(idx);
+                                                return (
+                                                    <TableRow key={entry.userId} className={idx === 0 ? "bg-muted/50" : ""}>
+                                                        <TableCell className="text-center font-medium">
+                                                            <div className="flex items-center justify-center gap-1">
+                                                                {placeIcon && <span>{placeIcon}</span>}
+                                                                <span>{idx + 1}</span>
+                                                            </div>
+                                                        </TableCell>
+                                                        <TableCell className="font-medium text-center">{entry.displayName}</TableCell>
+                                                        <TableCell className="text-center">
+                                                            <Badge variant="secondary" className="text-xs">
+                                                                ${entry.count}
+                                                            </Badge>
+                                                        </TableCell>
+                                                    </TableRow>
+                                                );
+                                            })}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
             </main>
         </div>
     );
