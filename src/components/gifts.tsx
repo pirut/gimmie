@@ -1,10 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
-import Checkout from "@/components/checkout";
 import { db } from "@/lib/instantdb";
+import GiveDollarButton from "@/components/give-dollar-button";
 
 export default function Dollars() {
     const { data, isLoading, error } = db.useQuery({ dollars: {}, displayNames: {} });
@@ -30,31 +27,7 @@ export default function Dollars() {
         <div className="mb-8 w-full max-w-md mx-auto bg-card p-4 rounded-lg border">
             <div className="flex flex-col items-center gap-4 mb-4">
                 <h2 className="text-xl font-bold">Total Dollars Given: {total}</h2>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button size="lg">Give Me a Dollar</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <SignedIn>
-                            <DialogTitle>Throw me A Bone</DialogTitle>
-                            <DialogContent className="max-h-full">
-                                <DialogTitle>Throw me A Bone</DialogTitle>
-                                <Checkout />
-                            </DialogContent>
-                        </SignedIn>
-                        <SignedOut>
-                            <DialogTitle>You think i would take money from a stranger?</DialogTitle>
-                            <div className="flex justify-center justify-self-center gap-4 mt-2">
-                                <SignUpButton>
-                                    <Button variant="outline">Sign Up</Button>
-                                </SignUpButton>
-                                <SignInButton>
-                                    <Button variant="outline">Sign In</Button>
-                                </SignInButton>
-                            </div>
-                        </SignedOut>
-                    </DialogContent>
-                </Dialog>
+                <GiveDollarButton />
             </div>
             <ul className="divide-y divide-gray-200">
                 {sortedDollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}

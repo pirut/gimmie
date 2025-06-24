@@ -4,11 +4,9 @@ import { db } from "@/lib/instantdb";
 import { Header } from "@/components/header";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import Checkout from "@/components/checkout";
+import GiveDollarButton from "@/components/give-dollar-button";
 
 // Types based on schema
 export type Dollar = {
@@ -23,22 +21,6 @@ export type DisplayName = {
     displayName: string;
     userId: string;
 };
-
-// Reusable dialog for giving a dollar (Stripe checkout)
-function GiveDollarDialog({ trigger }: { trigger: React.ReactNode }) {
-    return (
-        <Dialog>
-            <DialogTrigger asChild>{trigger}</DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Give a Dollar</DialogTitle>
-                    <DialogDescription>Complete your donation securely with Stripe checkout.</DialogDescription>
-                </DialogHeader>
-                <Checkout />
-            </DialogContent>
-        </Dialog>
-    );
-}
 
 export default function LeaderboardPage() {
     // Fetch all dollars and display names
@@ -111,7 +93,7 @@ export default function LeaderboardPage() {
                             </div>
                             <br />
                             <div className="flex justify-center pt-2">
-                                <GiveDollarDialog trigger={<Button size="lg">Give a Dollar</Button>} />
+                                <GiveDollarButton />
                             </div>
                         </CardContent>
                     </Card>
