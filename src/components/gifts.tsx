@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/instantdb";
 import GiveDollarButton from "@/components/give-dollar-button";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 
 export default function Dollars() {
     const { data, isLoading, error } = db.useQuery({ dollars: {}, displayNames: {} });
@@ -24,21 +25,27 @@ export default function Dollars() {
     }
 
     return (
-        <div className="mb-8 w-full max-w-md mx-auto bg-card p-4 rounded-lg border">
-            <div className="flex flex-col items-center gap-4 mb-4">
-                <h2 className="text-xl font-bold">Total Dollars Given: {total}</h2>
+        <Card className="mb-8 w-full max-w-4xl mx-auto">
+            <CardHeader className="flex flex-col items-center gap-4 mb-4">
+                <CardTitle className="text-xl font-bold text-center">
+                    Total Dollars Given: <br /> {total}
+                </CardTitle>
                 <GiveDollarButton />
-            </div>
-            <ul className="divide-y divide-gray-200">
-                {sortedDollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
-                {sortedDollars.map((dollar) => (
-                    <li key={dollar.id} className="py-2 flex justify-between text-sm">
-                        <span>$1 from {displayNameMap[dollar.userId] || "Anonymous"}</span>
-                        <span className="text-xs text-gray-400">{new Date(dollar.createdAt).toLocaleString()}</span>
-                    </li>
-                ))}
-            </ul>
-            {dollars.length > 100 && <div className="text-center text-sm text-muted-foreground mt-2">Showing latest 100 of {total} dollars</div>}
-        </div>
+            </CardHeader>
+            <CardContent className="p-0">
+                <ul className="divide-y divide-gray-200">
+                    {sortedDollars.length === 0 && <li className="py-2 text-muted-foreground">No dollars given yet.</li>}
+                    {sortedDollars.map((dollar) => (
+                        <li key={dollar.id} className="py-2 flex justify-between text-sm gap-10 px-6">
+                            <span>$1 from {displayNameMap[dollar.userId] || "Anonymous"}</span>
+                            <span className="text-xs text-gray-400">{new Date(dollar.createdAt).toLocaleString()}</span>
+                        </li>
+                    ))}
+                </ul>
+                {dollars.length > 100 && (
+                    <CardDescription className="text-center text-sm text-muted-foreground mt-2">Showing latest 100 of {total} dollars</CardDescription>
+                )}
+            </CardContent>
+        </Card>
     );
 }

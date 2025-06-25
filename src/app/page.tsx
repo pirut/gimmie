@@ -50,63 +50,70 @@ export default function HomePage() {
     function renderCursor({ presence, color }: { presence: Presence; color: string }) {
         // Use random color for others, tomato for self
         const dotColor = presence?.profileImageUrl ? getRandomColor(presence.profileImageUrl) : color;
+
+        // Calculate opacity based on dollars given (0.2 to 0.8 range)
+        const baseOpacity = 0.2;
+        const maxOpacity = 0.8;
+        const dollarsGiven = presence?.dollarsGiven || 0;
+        const opacity = Math.min(baseOpacity + dollarsGiven * 0.1, maxOpacity);
+
         return (
-            <div style={{ position: "relative", width: 64, height: 64, pointerEvents: "none", zIndex: 0, opacity: 0.6 }}>
+            <div style={{ position: "relative", width: 48, height: 48, pointerEvents: "none", opacity }}>
                 {/* Cursor dot with shadow and border */}
                 <div
                     style={{
-                        width: 32,
-                        height: 32,
-                        borderRadius: 16,
+                        width: 20,
+                        height: 20,
+                        borderRadius: 10,
                         background: dotColor,
                         position: "absolute",
-                        left: 16,
-                        top: 16,
+                        left: 14,
+                        top: 14,
                         zIndex: 1,
-                        boxShadow: "0 4px 16px 0 rgba(0,0,0,0.18)",
-                        border: "3px solid #fff",
+                        boxShadow: "0 2px 8px 0 rgba(0,0,0,0.12)",
+                        border: "2px solid #fff",
                         transition: "background 0.3s",
                     }}
                 />
-                {/* Profile image (top right, spaced out, with slight rotation) */}
+                {/* Profile image (top right, closer to cursor) */}
                 {presence?.profileImageUrl && (
                     <Image
                         src={presence.profileImageUrl}
                         alt="profile"
-                        width={32}
-                        height={32}
+                        width={20}
+                        height={20}
                         style={{
                             position: "absolute",
-                            top: -10,
-                            right: -10,
-                            borderRadius: 16,
+                            top: -2,
+                            right: -2,
+                            borderRadius: 10,
                             border: "2px solid #fff",
                             background: "#fff",
                             zIndex: 1,
-                            boxShadow: "0 2px 8px 0 rgba(0,0,0,0.12)",
-                            transform: "rotate(-8deg) scale(1.05)",
+                            boxShadow: "0 1px 4px 0 rgba(0,0,0,0.1)",
+                            transform: "rotate(-2deg) scale(0.85)",
                         }}
                     />
                 )}
-                {/* Dollars given (top left, spaced out, fun style) */}
+                {/* Dollars given (top left, closer to cursor) */}
                 {typeof presence?.dollarsGiven === "number" && (
                     <div
                         style={{
                             position: "absolute",
-                            top: -10,
-                            left: -10,
+                            top: -2,
+                            left: -2,
                             background: "linear-gradient(90deg, #fffbe7 60%, #ffe7e7 100%)",
                             color: "#222",
-                            borderRadius: 12,
-                            padding: "4px 12px",
-                            fontSize: 15,
-                            fontWeight: 700,
+                            borderRadius: 6,
+                            padding: "1px 6px",
+                            fontSize: 10,
+                            fontWeight: 600,
                             zIndex: 1,
-                            border: "2px solid #ffe066",
+                            border: "1px solid #ffe066",
                             fontFamily: "JetBrains Mono, monospace",
-                            boxShadow: "0 2px 8px 0 rgba(255,224,102,0.18)",
-                            letterSpacing: 1,
-                            transform: "rotate(-6deg)",
+                            boxShadow: "0 1px 4px 0 rgba(255,224,102,0.15)",
+                            letterSpacing: 0.3,
+                            transform: "rotate(-1deg)",
                         }}
                     >
                         ${presence.dollarsGiven}
@@ -118,10 +125,12 @@ export default function HomePage() {
 
     return (
         <Cursors room={room} className="min-w-full h-100vh" userCursorColor="tomato" renderCursor={renderCursor}>
-            <div className="min-h-screen flex flex-col relative z-10">
+            <div className="min-h-screen flex flex-col relative">
                 <Header />
-                <main className="flex-1 flex flex-col items-center justify-center p-4 relative z-10">
-                    <Dollars />
+                <main className="flex-1 flex flex-col items-center justify-center p-0 relative w-screen h-screen">
+                    <div className="relative bg-background rounded-lg shadow-lg p-0 z-30">
+                        <Dollars />
+                    </div>
                 </main>
                 <Footer />
             </div>
