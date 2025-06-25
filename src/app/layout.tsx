@@ -53,6 +53,10 @@ export default function RootLayout({
     return (
         <ClerkProvider>
             <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
+                <head>
+                    <meta property="og:image:width" content="1200" />
+                    <meta property="og:image:height" content="630" />
+                </head>
                 <body className="min-h-screen bg-background font-sans antialiased">
                     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                         <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
