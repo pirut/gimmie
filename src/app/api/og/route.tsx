@@ -23,7 +23,7 @@ export async function GET(req: Request) {
                 }}
             >
                 <div style={{ fontSize: 80, marginBottom: 30 }}>💸</div>
-                <div style={{ fontWeight: "bold", marginBottom: 20 }}>{`I&apos;ve given $${amount}`}</div>
+                <div style={{ fontWeight: "bold", marginBottom: 20 }}>{`I've given $${amount}`}</div>
                 <div style={{ fontSize: 36 }}>You should too!</div>
                 <div style={{ fontSize: 24, marginTop: 40, color: "#888" }}>gimme.jrbussard.com</div>
             </div>
