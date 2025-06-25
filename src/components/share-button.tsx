@@ -14,16 +14,12 @@ interface ShareButtonProps {
     buttonClassName?: string;
 }
 
-export function ShareButton({
-    url = "https://gimme.jrbussard.com/",
-    text = "Check out gimme.jrbussard.com – Give a dollar, make a difference!",
-    tooltip = "Share this site",
-    icon,
-    buttonClassName = "border-blue-600 text-blue-600 hover:bg-blue-50",
-}: ShareButtonProps) {
+export function ShareButton({ url: propUrl, text: propText, tooltip = "Share this site", icon, buttonClassName = "" }: ShareButtonProps) {
     const [copied, setCopied] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [isShareSupported, setIsShareSupported] = useState(false);
+    const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
+    const fullUrl = typeof window !== "undefined" ? window.location.href : undefined;
 
     React.useEffect(() => {
         setIsClient(true);
@@ -31,6 +27,18 @@ export function ShareButton({
     }, []);
 
     if (!isClient) return null;
+
+    // Dynamic share text logic
+    const url = propUrl || fullUrl || "https://gimme.jrbussard.com/";
+    let text = propText || "Check out gimme.jrbussard.com - Give a dollar!";
+    if (!propText && pathname) {
+        // Thank you page: /thank-you/[amount]
+        const thankYouMatch = pathname.match(/^\/thank-you\/(\d+)/);
+        if (thankYouMatch) {
+            const amount = thankYouMatch[1];
+            text = `I've given $${amount} on gimme.jrbussard.com, you should too!`;
+        }
+    }
 
     const handleShare = async () => {
         if (isShareSupported) {

@@ -1,7 +1,4 @@
 "use client";
-import { useParams } from "next/navigation";
-import Dollars from "@/components/gifts";
-import { Header } from "@/components/header";
 import { useUser } from "@clerk/nextjs";
 import { db } from "@/lib/instantdb";
 import { useState } from "react";
@@ -11,10 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { setDisplayName } from "@/app/actions/user";
 import { ShareButton } from "@/components/share-button";
+import { Header } from "@/components/header";
+import Dollars from "@/components/gifts";
 
 export default function ThankYouPage() {
-    const params = useParams();
-    const amount = typeof params.amount === "string" ? params.amount : Array.isArray(params.amount) ? params.amount[0] : "1";
     const { user } = useUser();
     const { data } = db.useQuery({ dollars: {}, displayNames: {} });
     const [newDisplayName, setNewDisplayName] = useState("");
@@ -39,9 +36,6 @@ export default function ThankYouPage() {
         }
     };
 
-    const shareUrl = `https://gimme.jrbussard.com/thank-you/${amount}`;
-    const shareText = `I've given $${amount} on gimme.jrbussard.com, you should too!`;
-
     return (
         <>
             <Header />
@@ -49,7 +43,7 @@ export default function ThankYouPage() {
                 <h1 className="text-3xl font-bold mb-4">Thank you for your support!</h1>
                 <p className="mb-8 text-lg">Your dollar has been received. You rock!</p>
                 <div className="flex flex-col items-center w-full max-w-xs mb-6">
-                    <ShareButton url={shareUrl} text={shareText} tooltip="Share your dollars!" buttonClassName="" />
+                    <ShareButton tooltip="Share your dollars!" buttonClassName="" />
                 </div>
                 {shouldPrompt && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">

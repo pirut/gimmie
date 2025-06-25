@@ -12,6 +12,26 @@ import { useState } from "react";
 import { setDisplayName } from "@/app/actions/user";
 import { HelpCircle } from "lucide-react";
 
+// DollarIcon component for proportional SVG rendering
+function DollarIcon({ size = 16, className = "" }: { size?: number; className?: string }) {
+    return (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 500 500"
+            width={size}
+            height={size}
+            className={className}
+            style={{ display: "inline", verticalAlign: "middle" }}
+        >
+            <path
+                d="m 145,312 c -2,69 31,100 104,102 78,1 113,-34 109,-101 -6,-58 -62,-73 -106,-79 -48,-17 -99,-25 -99,-95 0,-48 32,-79 99,-78 60,0 97,25 96,84"
+                style={{ fill: "none", stroke: "#000", strokeWidth: 40 }}
+            />
+            <path d="m 250,15 0,470" style={{ stroke: "#000", strokeWidth: 30 }} />
+        </svg>
+    );
+}
+
 export default function DashboardPage() {
     const { user, isLoaded, isSignedIn } = useUser();
     const { data } = db.useQuery({
@@ -144,10 +164,12 @@ export default function DashboardPage() {
                                 </Dialog>
                             </CardDescription>
                             <CardDescription>
-                                <strong>Total Dollars Given:</strong> ${totalDollars}
+                                <strong>Total Dollars Given:</strong> <DollarIcon size={14} className="inline mr-1" />
+                                {totalDollars}
                             </CardDescription>
                             <CardDescription>
-                                <strong>Available Dollars:</strong> ${unusedDollars}
+                                <strong>Available Dollars:</strong> <DollarIcon size={14} className="inline mr-1" />
+                                {unusedDollars}
                             </CardDescription>
                             <CardDescription>
                                 <strong>Created:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}

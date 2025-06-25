@@ -116,10 +116,31 @@ export default function HomePage() {
                             transform: "rotate(-1deg)",
                         }}
                     >
-                        ${presence.dollarsGiven}
+                        <DollarIcon size={9} className="mr-0.5" />
+                        {presence.dollarsGiven}
                     </div>
                 )}
             </div>
+        );
+    }
+
+    // DollarIcon component for proportional SVG rendering
+    function DollarIcon({ size = 10, className = "" }: { size?: number; className?: string }) {
+        return (
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 500 500"
+                width={size}
+                height={size}
+                className={className}
+                style={{ display: "inline", verticalAlign: "middle" }}
+            >
+                <path
+                    d="m 145,312 c -2,69 31,100 104,102 78,1 113,-34 109,-101 -6,-58 -62,-73 -106,-79 -48,-17 -99,-25 -99,-95 0,-48 32,-79 99,-78 60,0 97,25 96,84"
+                    style={{ fill: "none", stroke: "#000", strokeWidth: 40 }}
+                />
+                <path d="m 250,15 0,470" style={{ stroke: "#000", strokeWidth: 30 }} />
+            </svg>
         );
     }
 
@@ -127,8 +148,8 @@ export default function HomePage() {
         <Cursors room={room} className="min-w-full h-100vh" userCursorColor="tomato" renderCursor={renderCursor}>
             <div className="min-h-screen flex flex-col relative">
                 <Header />
-                <main className="flex-1 flex flex-col items-center justify-center p-0 relative w-screen h-screen">
-                    <div className="relative bg-background rounded-lg shadow-lg p-0 z-30">
+                <main className="flex-1 flex flex-col items-center justify-center w-full relative">
+                    <div className="relative bg-background rounded-lg shadow-lg w-full max-w-7xl mx-auto px-2 sm:px-4 md:px-8 z-30">
                         <Dollars />
                     </div>
                 </main>
