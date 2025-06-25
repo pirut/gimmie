@@ -6,6 +6,7 @@ import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuL
 import { SignUpButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { ShareButton } from "@/components/share-button";
 
 export function Header() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -75,6 +76,7 @@ export function Header() {
 
             {/* Right side buttons */}
             <div className="flex gap-4 items-center">
+                {!isMobile && <ShareButton />}
                 <SignedOut>
                     <SignUpButton>
                         <Button variant="outline" className="hidden sm:inline-flex">
