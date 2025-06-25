@@ -2,8 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { db } from "@/lib/instantdb";
-import { id } from "@instantdb/react";
+
 
 type RecordDonationProps = {
     customerId: string;
@@ -16,17 +15,24 @@ export default function RecordDonation({ customerId }: RecordDonationProps) {
     useEffect(() => {
         if (hasRun.current) return;
         hasRun.current = true;
-        if (customerId) {
-            db.transact(
-                db.tx.dollars[id()].update({
-                    userId: customerId,
-                    createdAt: Date.now(),
-                    used: false,
-                    usedFor: "",
-                })
-            );
-        }
-        router.push("/thank-you");
+        const record = async () => {
+            if (customerId) {
+                try {
+                    await fetch("/return/record-dollar", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            userId: customerId,
+                            createdAt: Date.now(),
+                        }),
+                    });
+                } catch (err) {
+                    console.error("Error recording donation", err);
+                }
+            }
+            router.push("/thank-you");
+        };
+        record();
     }, [customerId, router]);
 
     return (

@@ -6,9 +6,25 @@ const rules = {
     $default: {
         allow: {
             view: "true",
-            create: "true",
-            delete: "true",
-            update: "true",
+            create: "false",
+            update: "false",
+            delete: "false",
+        },
+    },
+    dollars: {
+        allow: {
+            view: "true",
+            create: "false",
+            update: "false",
+            delete: "false",
+        },
+    },
+    displayNames: {
+        allow: {
+            view: "true",
+            create: "false",
+            update: "false",
+            delete: "false",
         },
     },
 } satisfies InstantRules;
