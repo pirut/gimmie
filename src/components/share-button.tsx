@@ -18,12 +18,16 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
     const [copied, setCopied] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [isShareSupported, setIsShareSupported] = useState(false);
+    const [isIos, setIsIos] = useState(false);
     const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
     const fullUrl = typeof window !== "undefined" ? window.location.href : undefined;
 
     React.useEffect(() => {
         setIsClient(true);
-        setIsShareSupported(typeof window !== "undefined" && !!navigator.share);
+        if (typeof window !== "undefined") {
+            setIsShareSupported(!!navigator.share);
+            setIsIos(/iPad|iPhone|iPod/.test(navigator.userAgent));
+        }
     }, []);
 
     if (!isClient) return null;
@@ -41,24 +45,31 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
     }
 
     const handleShare = async () => {
-        if (isShareSupported) {
+        if (isShareSupported && !isIos) {
             try {
                 await navigator.share({
                     title: "Gimme a Dollar",
                     text,
                     url,
                 });
+                return;
             } catch (err: unknown) {
                 // Ignore abort/cancellation errors
                 if (err && typeof err === "object" && "name" in err && (err as { name: string }).name !== "AbortError") {
                     console.error(err);
                 }
             }
-        } else {
-            await navigator.clipboard.writeText(url);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 2000);
         }
+
+        if (isIos) {
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
+            window.open(twitterUrl, "_blank");
+            return;
+        }
+
+        await navigator.clipboard.writeText(url);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
     };
 
     return (
