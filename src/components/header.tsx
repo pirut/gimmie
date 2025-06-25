@@ -76,7 +76,6 @@ export function Header() {
 
             {/* Right side buttons */}
             <div className="flex gap-4 items-center">
-                {!isMobile && <ShareButton />}
                 <SignedOut>
                     <SignUpButton>
                         <Button variant="outline" className="hidden sm:inline-flex">
@@ -87,6 +86,7 @@ export function Header() {
                 <SignedIn>
                     <UserButton />
                 </SignedIn>
+                <ShareButton />
                 <ModeToggle />
             </div>
 

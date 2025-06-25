@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { setDisplayName } from "@/app/actions/user";
 import { ShareButton } from "@/components/share-button";
-import Image from "next/image";
 
 export default function ThankYouPage() {
     const params = useParams();
@@ -41,7 +40,6 @@ export default function ThankYouPage() {
     };
 
     const shareUrl = `https://gimme.jrbussard.com/thank-you/${amount}`;
-    const ogImageUrl = `https://gimme.jrbussard.com/api/og?amount=${amount}`;
     const shareText = `I've given $${amount} on gimme.jrbussard.com, you should too!`;
 
     return (
@@ -53,7 +51,6 @@ export default function ThankYouPage() {
                 <div className="flex flex-col items-center w-full max-w-xs mb-6">
                     <ShareButton url={shareUrl} text={shareText} tooltip="Share your dollars!" buttonClassName="" />
                 </div>
-                <Image src={ogImageUrl} alt={shareText} width={400} height={210} className="rounded-lg shadow mb-8" unoptimized priority />
                 {shouldPrompt && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
                         <Card>
