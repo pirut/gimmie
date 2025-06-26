@@ -18,15 +18,13 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
     const [copied, setCopied] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [isShareSupported, setIsShareSupported] = useState(false);
-    const [isIos, setIsIos] = useState(false);
     const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
     const fullUrl = typeof window !== "undefined" ? window.location.href : undefined;
 
     React.useEffect(() => {
         setIsClient(true);
-        if (typeof window !== "undefined") {
+        if (typeof navigator !== "undefined") {
             setIsShareSupported(!!navigator.share);
-            setIsIos(/iPad|iPhone|iPod/.test(navigator.userAgent));
         }
     }, []);
 
@@ -40,12 +38,12 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
         const thankYouMatch = pathname.match(/^\/thank-you\/(\d+)/);
         if (thankYouMatch) {
             const amount = thankYouMatch[1];
-            text = `I've given $${amount} on gimme.jrbussard.com, you should too!`;
+            text = `I've given ${amount} on gimme.jrbussard.com, you should too!`;
         }
     }
 
     const handleShare = async () => {
-        if (isShareSupported && !isIos) {
+        if (navigator.share) {
             try {
                 await navigator.share({
                     title: "Gimme a Dollar",
@@ -55,21 +53,17 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
                 return;
             } catch (err: unknown) {
                 // Ignore abort/cancellation errors
-                if (err && typeof err === "object" && "name" in err && (err as { name: string }).name !== "AbortError") {
-                    console.error(err);
+                if (err instanceof Error && err.name === "AbortError") {
+                    return;
                 }
+                console.error(err);
             }
+        } else {
+            // Fallback for browsers that don't support navigator.share
+            await navigator.clipboard.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
         }
-
-        if (isIos) {
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;
-            window.open(twitterUrl, "_blank");
-            return;
-        }
-
-        await navigator.clipboard.writeText(url);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
     };
 
     return (
@@ -81,7 +75,7 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
                         <span className="sr-only">{isShareSupported ? "Share this site!" : copied ? "Link copied!" : "Copy share link"}</span>
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent>{isShareSupported ? (copied ? "Link copied!" : tooltip) : copied ? "Link copied!" : "Copy share link"}</TooltipContent>
+                <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>{isShareSupported ? tooltip : copied ? "Link copied!" : "Copy share link"}</TooltipContent>
             </Tooltip>
         </TooltipProvider>
     );

@@ -1,22 +1,38 @@
 import type { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { amount: string } }): Promise<Metadata> {
-    const amount = params.amount || "1";
+type Props = {
+    params: { amount: string };
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+    const amount = params.amount;
+    const title = `I've given $${amount} on gimme.jrbussard.com`;
+    const description = "You should too!";
+    const url = `https://gimme.jrbussard.com/thank-you/${amount}`;
+    const imageUrl = `https://gimme.jrbussard.com/api/og?amount=${amount}`;
+
     return {
-        title: `I've given $${amount} on gimme.jrbussard.com, you should too!`,
+        title: title,
+        description: description,
         openGraph: {
+            title: title,
+            description: description,
+            url: url,
             images: [
                 {
-                    url: `https://gimme.jrbussard.com/api/og?amount=${amount}&v=2`,
+                    url: imageUrl,
                     width: 1200,
                     height: 630,
-                    alt: `I've given $${amount} on gimme.jrbussard.com, you should too!`,
+                    alt: title,
                 },
             ],
+            type: "website",
         },
-        other: {
-            "og:image:width": "1200",
-            "og:image:height": "630",
+        twitter: {
+            card: "summary_large_image",
+            title: title,
+            description: description,
+            images: [imageUrl],
         },
     };
 }
