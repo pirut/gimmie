@@ -32,6 +32,11 @@ export async function generateMetadata({ params }: any): Promise<Metadata> {
             description,
             images: [imageUrl],
         },
+        // Explicitly include image dimensions for better scraper support
+        other: {
+            "og:image:width": "1200",
+            "og:image:height": "630",
+        },
     };
 }
 
