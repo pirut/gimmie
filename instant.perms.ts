@@ -6,10 +6,17 @@ const rules = {
     $default: {
         allow: {
             view: "true",
-            create: "true",
-            delete: "true",
-            update: "true",
+            create: "auth.id != null",
+            update: "auth.id != null",
+            delete: "false",
         },
+    },
+    dollars: {
+        allow: {
+            create: "auth.id != null && hasCompletedPayment",
+            update: "false",
+        },
+        bind: ["hasCompletedPayment", "ruleParams.hasCompletedPayment == true"],
     },
 } satisfies InstantRules;
 

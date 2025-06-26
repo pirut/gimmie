@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { init, id } from "@instantdb/admin";
 
 // InstantDB app ID and admin token are loaded from environment variables
-const APP_ID = process.env.NEXT_PUBLIC_INSTANTDB_PUBLISHABLE_KEY!;
+const APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID!;
 const ADMIN_TOKEN = process.env.INSTANTDB_SECRET_KEY!;
 
 const db = init({
@@ -23,10 +23,12 @@ export async function POST(req: NextRequest) {
 
         // Write a new dollar record
         const txResult = await db.transact([
-            db.tx.dollars[id()].update({
-                userId,
-                createdAt,
-            }),
+            db.tx.dollars[id()]
+                .update({
+                    userId,
+                    createdAt,
+                })
+                .ruleParams({ hasCompletedPayment: true }),
         ]);
 
         return NextResponse.json({ success: true, txId: txResult["tx-id"] });

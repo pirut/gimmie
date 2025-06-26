@@ -61,8 +61,6 @@ export async function setDisplayName(displayName: string) {
         }
 
         // Second transaction: Mark dollar as used
-        console.log("All dollars for user:", dollars);
-        console.log("About to update dollar:", unusedDollar);
         const dollarUpdateResult = await db.transact(
             db.tx.dollars[unusedDollar.id].update({
                 used: true,
