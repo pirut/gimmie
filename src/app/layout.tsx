@@ -33,16 +33,6 @@ export const metadata: Metadata = {
             },
         ],
     },
-    openGraph: {
-        images: [
-            {
-                url: "https://gimme.jrbussard.com/api/og?amount=1",
-                width: 1200,
-                height: 630,
-                alt: "I've given $1 on gimme.jrbussard.com, you should too!",
-            },
-        ],
-    },
 };
 
 export default function RootLayout({
