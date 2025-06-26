@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { Share2 } from "lucide-react";
 import React from "react";
+import { db } from "@/lib/instantdb";
 
 interface ShareButtonProps {
     url?: string;
@@ -18,8 +19,10 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
     const [copied, setCopied] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [isShareSupported, setIsShareSupported] = useState(false);
-    const pathname = typeof window !== "undefined" ? window.location.pathname : undefined;
-    const fullUrl = typeof window !== "undefined" ? window.location.href : undefined;
+
+    // Fetch total dollars from InstantDB
+    const { data, isLoading, error } = db.useQuery({ dollars: {} });
+    const totalDollars = data?.dollars?.length ?? 0;
 
     React.useEffect(() => {
         setIsClient(true);
@@ -30,15 +33,16 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
 
     if (!isClient) return null;
 
-    // Dynamic share text logic
-    const url = propUrl || fullUrl || "https://gimme.jrbussard.com/";
-    let text = propText || "Check out gimme.jrbussard.com - Give a dollar!";
-    if (!propText && pathname) {
-        // Thank you page: /thank-you/[amount]
-        const thankYouMatch = pathname.match(/^\/thank-you\/(\d+)/);
-        if (thankYouMatch) {
-            const amount = thankYouMatch[1];
-            text = `I've given ${amount} on gimme.jrbussard.com, you should too!`;
+    // Use /share/[amount] route for sharing
+    const url = propUrl || `https://gimme.jrbussard.com/share/${totalDollars}`;
+    let text = propText;
+    if (!text) {
+        if (isLoading) {
+            text = "Check out gimme.jrbussard.com - Give a dollar!";
+        } else if (error) {
+            text = "Join me on gimme.jrbussard.com!";
+        } else {
+            text = `I've given $${totalDollars} on gimme.jrbussard.com! Join me!`;
         }
     }
 
@@ -75,7 +79,9 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
                         <span className="sr-only">{isShareSupported ? "Share this site!" : copied ? "Link copied!" : "Copy share link"}</span>
                     </Button>
                 </TooltipTrigger>
-                <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>{isShareSupported ? tooltip : copied ? "Link copied!" : "Copy share link"}</TooltipContent>
+                <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
+                    {isShareSupported ? tooltip : copied ? "Link copied!" : "Copy share link"}
+                </TooltipContent>
             </Tooltip>
         </TooltipProvider>
     );
