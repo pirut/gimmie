@@ -6,6 +6,7 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import { Share2 } from "lucide-react";
 import React from "react";
 import { db } from "@/lib/instantdb";
+import { useUser } from "@clerk/nextjs";
 
 interface ShareButtonProps {
     url?: string;
@@ -19,10 +20,11 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
     const [copied, setCopied] = useState(false);
     const [isClient, setIsClient] = useState(false);
     const [isShareSupported, setIsShareSupported] = useState(false);
+    const { user, isLoaded, isSignedIn } = useUser();
 
-    // Fetch total dollars from InstantDB
-    const { data, isLoading, error } = db.useQuery({ dollars: {} });
-    const totalDollars = data?.dollars?.length ?? 0;
+    // Fetch only the current user's dollars from InstantDB
+    const { data, isLoading, error } = db.useQuery({ dollars: user?.id ? { $: { where: { userId: user.id } } } : {} });
+    const userDollars = data?.dollars?.length ?? 0;
 
     React.useEffect(() => {
         setIsClient(true);
@@ -31,10 +33,10 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
         }
     }, []);
 
-    if (!isClient) return null;
+    if (!isClient || !isLoaded || !isSignedIn || !user) return null;
 
     // Use /share/[amount] route for sharing
-    const url = propUrl || `https://gimme.jrbussard.com/share/${totalDollars}`;
+    const url = propUrl || `https://gimme.jrbussard.com/share/${userDollars}`;
     let text = propText;
     if (!text) {
         if (isLoading) {
@@ -42,7 +44,7 @@ export function ShareButton({ url: propUrl, text: propText, tooltip = "Share thi
         } else if (error) {
             text = "Join me on gimme.jrbussard.com!";
         } else {
-            text = `I've given $${totalDollars} on gimme.jrbussard.com! Join me!`;
+            text = `I've given $${userDollars} on gimme.jrbussard.com! Join me!`;
         }
     }
 
