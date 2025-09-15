@@ -12,17 +12,17 @@ export default function AboutPage() {
                 <Card className="w-full">
                     <CardHeader>
                         <CardTitle>About</CardTitle>
-                        <CardDescription>Learn more about Give Me a Dollar and the tech behind it</CardDescription>
+                        <CardDescription>Learn more about Give Me a Click and the tech behind it</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <Card className="mb-4">
                             <CardHeader>
-                                <CardTitle className="text-lg">Give Me a Dollar</CardTitle>
+                                <CardTitle className="text-lg">Give Me a Click</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <CardDescription>
-                                    This site is a playful experiment in generosity, humor, and the internet economy. There&#39;s no big mission—just a simple
-                                    way to send me a dollar if you&#39;re feeling generous or amused.
+                                    This site started as a joke about internet generosity. It has now evolved into a playful click counter—no payments required,
+                                    just a shared laugh.
                                 </CardDescription>
                             </CardContent>
                         </Card>
@@ -44,11 +44,6 @@ export default function AboutPage() {
                                 <Button asChild variant="link" className="justify-start p-0 h-auto">
                                     <a href="https://clerk.com/" target="_blank" rel="noopener noreferrer">
                                         Clerk
-                                    </a>
-                                </Button>
-                                <Button asChild variant="link" className="justify-start p-0 h-auto">
-                                    <a href="https://stripe.com/" target="_blank" rel="noopener noreferrer">
-                                        Stripe
                                     </a>
                                 </Button>
                                 <Button asChild variant="link" className="justify-start p-0 h-auto">

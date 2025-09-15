@@ -6,10 +6,10 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import { useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import GiveDollarButton from "@/components/give-dollar-button";
+import GiveClickButton from "@/components/give-click-button";
 
 // Types based on schema
-export type Dollar = {
+export type Click = {
     id: string;
     createdAt: number;
     userId: string;
@@ -22,29 +22,11 @@ export type DisplayName = {
     userId: string;
 };
 
-// DollarIcon component for proportional SVG rendering
-function DollarIcon({ size = 14, className = "" }: { size?: number; className?: string }) {
-    return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 500 500"
-            width={size}
-            height={size}
-            className={className}
-            style={{ display: "inline", verticalAlign: "middle" }}
-        >
-            <path
-                d="m 145,312 c -2,69 31,100 104,102 78,1 113,-34 109,-101 -6,-58 -62,-73 -106,-79 -48,-17 -99,-25 -99,-95 0,-48 32,-79 99,-78 60,0 97,25 96,84"
-                style={{ fill: "none", stroke: "#000", strokeWidth: 40 }}
-            />
-            <path d="m 250,15 0,470" style={{ stroke: "#000", strokeWidth: 30 }} />
-        </svg>
-    );
-}
+import { MousePointerClick } from "lucide-react";
 
 export default function LeaderboardPage() {
-    // Fetch all dollars and display names
-    const { data, isLoading, error } = db.useQuery({ dollars: {}, displayNames: {} });
+    // Fetch all clicks and display names
+    const { data, isLoading, error } = db.useQuery({ clicks: {}, displayNames: {} });
 
     // Map userId to displayName
     const displayNameMap: Record<string, string> = useMemo(() => {
@@ -55,11 +37,11 @@ export default function LeaderboardPage() {
         return map;
     }, [data?.displayNames]);
 
-    // Count dollars per user
+    // Count clicks per user
     const leaderboard = useMemo(() => {
         const counts: Record<string, number> = {};
-        (data?.dollars ?? []).forEach((d: Dollar) => {
-            counts[d.userId] = (counts[d.userId] || 0) + 1;
+        (data?.clicks ?? []).forEach((click: Click) => {
+            counts[click.userId] = (counts[click.userId] || 0) + 1;
         });
         // Convert to array and sort
         return Object.entries(counts)
@@ -70,7 +52,7 @@ export default function LeaderboardPage() {
             }))
             .sort((a, b) => b.count - a.count)
             .slice(0, 100);
-    }, [data?.dollars, displayNameMap]);
+    }, [data?.clicks, displayNameMap]);
 
     const getPlaceIcon = (index: number) => {
         if (index === 0) return "🥇";
@@ -88,15 +70,14 @@ export default function LeaderboardPage() {
                         <CardHeader className="pb-4">
                             <CardTitle className="text-lg">About the Leaderboard</CardTitle>
                             <CardDescription>
-                                This leaderboard celebrates the top 100 people who have given a dollar on this site. The more dollars you give, the higher you
-                                climb!
+                                This leaderboard celebrates the top 100 people who have sent a click on this site. The more clicks you add, the higher you climb!
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-3 px-4">
                             <div className="grid gap-1.5 text-sm">
                                 <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 bg-primary rounded-full"></span>
-                                    <span>Each $1 given counts as one point</span>
+                                    <span>Each recorded click counts as one point</span>
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 bg-primary rounded-full"></span>
@@ -108,12 +89,12 @@ export default function LeaderboardPage() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <span className="w-2 h-2 bg-primary rounded-full"></span>
-                                    <span>Want to see your name here? Give a dollar!</span>
+                                    <span>Want to see your name here? Add more clicks!</span>
                                 </div>
                             </div>
                             <br />
                             <div className="flex justify-center pt-2">
-                                <GiveDollarButton />
+                                <GiveClickButton />
                             </div>
                         </CardContent>
                     </Card>
@@ -131,10 +112,10 @@ export default function LeaderboardPage() {
                                 <div className="text-center py-8">
                                     <div className="text-destructive">Error: {error.message}</div>
                                 </div>
-                            ) : leaderboard.length === 0 ? (
-                                <div className="text-center py-8">
-                                    <div className="text-muted-foreground">No donations yet.</div>
-                                </div>
+                              ) : leaderboard.length === 0 ? (
+                                  <div className="text-center py-8">
+                                      <div className="text-muted-foreground">No clicks yet.</div>
+                                  </div>
                             ) : (
                                 <div className="rounded-md border">
                                     <Table>
@@ -142,7 +123,7 @@ export default function LeaderboardPage() {
                                             <TableRow>
                                                 <TableHead className="w-16 text-center">Rank</TableHead>
                                                 <TableHead className="text-center">Name</TableHead>
-                                                <TableHead className="text-center w-24">Dollars</TableHead>
+                                                <TableHead className="text-center w-24">Clicks</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>
@@ -158,8 +139,8 @@ export default function LeaderboardPage() {
                                                         </TableCell>
                                                         <TableCell className="font-medium text-center">{entry.displayName}</TableCell>
                                                         <TableCell className="text-center">
-                                                            <Badge variant="secondary" className="text-xs">
-                                                                <DollarIcon size={12} className="inline mr-1" />
+                                                            <Badge variant="secondary" className="text-xs flex items-center gap-1 justify-center">
+                                                                <MousePointerClick className="h-4 w-4" />
                                                                 {entry.count}
                                                             </Badge>
                                                         </TableCell>

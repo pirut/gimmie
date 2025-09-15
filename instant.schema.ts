@@ -15,7 +15,7 @@ const _schema = i.schema({
             displayName: i.string(),
             userId: i.string().unique(),
         }),
-        dollars: i.entity({
+        clicks: i.entity({
             createdAt: i.number(),
             userId: i.string(),
             used: i.boolean().optional(),
@@ -26,7 +26,7 @@ const _schema = i.schema({
     rooms: {
         chat: {
             presence: i.entity({
-                dollarsGiven: i.number(),
+                clicksGiven: i.number(),
                 name: i.string(),
                 profileImageUrl: i.string(),
                 status: i.string(),

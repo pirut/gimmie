@@ -14,31 +14,27 @@ export async function setDisplayName(displayName: string) {
         throw new Error("Invalid display name");
     }
 
-    // Query for existing display name and available dollars
-    const { displayNames, dollars } = await db.query({
+    // Query for existing display name and available clicks
+    const { displayNames, clicks } = await db.query({
         displayNames: {
             $: {
                 where: { userId: userId },
             },
         },
-        dollars: {
+        clicks: {
             $: {
                 where: { userId: userId },
             },
         },
     });
 
-    // Count unused dollars
-    const unusedDollars = dollars.filter((dollar) => !dollar.used).length;
-    if (unusedDollars === 0) {
-        throw new Error("You need to give another dollar to change your display name");
+    // Count unused clicks
+    const unusedClicks = clicks.filter((click) => !click.used);
+    if (unusedClicks.length < 100) {
+        throw new Error("You need at least 100 unused clicks to change your display name");
     }
 
-    // Get the first unused dollar to mark as used
-    const unusedDollar = dollars.find((dollar) => !dollar.used);
-    if (!unusedDollar) {
-        throw new Error("No unused dollars found");
-    }
+    const clicksToUse = unusedClicks.slice(0, 100);
 
     const existing = displayNames[0];
 
@@ -60,14 +56,18 @@ export async function setDisplayName(displayName: string) {
             );
         }
 
-        // Second transaction: Mark dollar as used
-        const dollarUpdateResult = await db.transact(
-            db.tx.dollars[unusedDollar.id].update({
+        const usedForMessage = existing
+            ? "Changed display name to: " + displayName
+            : "Set initial display name to: " + displayName;
+
+        const clickUpdateTransactions = clicksToUse.map((click, index) =>
+            db.tx.clicks[click.id].update({
                 used: true,
-                usedFor: existing ? "Changed display name to: " + displayName : "Set initial display name to: " + displayName,
+                usedFor: `${usedForMessage} (click ${index + 1} of 100)`,
             })
         );
-        console.log("Dollar update result:", dollarUpdateResult);
+
+        await db.transact(clickUpdateTransactions);
     } catch (error) {
         console.error("Transaction failed:", error);
         if (error instanceof Error) {
@@ -77,72 +77,78 @@ export async function setDisplayName(displayName: string) {
     }
 }
 
-export async function getAvailableDollars(userId: string) {
-    const { dollars } = await db.query({
-        dollars: {
+export async function getAvailableClicks(userId: string) {
+    const { clicks } = await db.query({
+        clicks: {
             $: {
                 where: { userId },
             },
         },
     });
 
-    return dollars.filter((dollar) => !dollar.used).length;
+    return clicks.filter((click) => !click.used).length;
 }
 
-export async function useDollar(userId: string, purpose: string) {
-    const { dollars } = await db.query({
-        dollars: {
+export async function useClicks(userId: string, purpose: string, amount = 1) {
+    if (amount < 1) {
+        throw new Error("Amount must be at least 1");
+    }
+
+    const { clicks } = await db.query({
+        clicks: {
             $: {
                 where: { userId },
             },
         },
     });
 
-    const unusedDollar = dollars.find((dollar) => !dollar.used);
-    if (!unusedDollar) {
-        throw new Error("No unused dollars available");
+    const availableClicks = clicks.filter((click) => !click.used);
+    if (availableClicks.length < amount) {
+        throw new Error("Not enough unused clicks available");
     }
 
-    await db.transact(
-        db.tx.dollars[unusedDollar.id].update({
-            userId: unusedDollar.userId,
-            createdAt: unusedDollar.createdAt,
+    const clickUpdates = availableClicks.slice(0, amount).map((click) =>
+        db.tx.clicks[click.id].update({
+            userId: click.userId,
+            createdAt: click.createdAt,
             used: true,
             usedFor: purpose,
         })
     );
 
+    await db.transact(clickUpdates);
+
     return true;
 }
 
-// TEMPORARY: Migration function to fix missing fields on dollars
-export async function migrateDollarsForCurrentUser() {
+// TEMPORARY: Migration function to fix missing fields on clicks
+export async function migrateClicksForCurrentUser() {
     const { userId } = await auth();
     if (!userId) {
         throw new Error("User not authenticated");
     }
-    const { dollars } = await db.query({
-        dollars: {
+    const { clicks } = await db.query({
+        clicks: {
             $: { where: { userId } },
         },
     });
-    const txs = dollars
-        .filter((d) => d.used === undefined || d.usedFor === undefined)
-        .map((d) => {
+    const txs = clicks
+        .filter((click) => click.used === undefined || click.usedFor === undefined)
+        .map((click) => {
             const payload = {
-                id: d.id,
-                userId: d.userId,
-                createdAt: d.createdAt,
-                used: d.used !== undefined ? d.used : false,
-                usedFor: d.usedFor !== undefined ? d.usedFor : "",
+                id: click.id,
+                userId: click.userId,
+                createdAt: click.createdAt,
+                used: click.used !== undefined ? click.used : false,
+                usedFor: click.usedFor !== undefined ? click.usedFor : "",
             };
-            console.log("Migrating dollar:", d, "with payload:", payload);
-            return db.tx.dollars[d.id].update(payload);
+            console.log("Migrating click:", click, "with payload:", payload);
+            return db.tx.clicks[click.id].update(payload);
         });
     if (txs.length > 0) {
         await db.transact(txs);
-        return `${txs.length} dollars migrated.`;
+        return `${txs.length} clicks migrated.`;
     } else {
-        return "No dollars needed migration.";
+        return "No clicks needed migration.";
     }
 }
