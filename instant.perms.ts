@@ -11,12 +11,11 @@ const rules = {
             delete: "false",
         },
     },
-    dollars: {
+    clicks: {
         allow: {
-            create: "auth.id != null && hasCompletedPayment",
+            create: "auth.id != null",
             update: "false",
         },
-        bind: ["hasCompletedPayment", "ruleParams.hasCompletedPayment == true"],
     },
 } satisfies InstantRules;
 

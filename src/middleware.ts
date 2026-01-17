@@ -5,8 +5,6 @@ const isPublicRoute = createRouteMatcher([
     "/about",
     "/faq",
     "/leaderboard",
-    "/api/stripe-session(.*)",
-    "/return(.*)",
     "/thank-you(.*)",
     "/share(.*)",
     "/api/og(.*)",

@@ -4,7 +4,10 @@ export const runtime = "edge";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
-    const amount = searchParams.get("amount") || "1";
+    const amountParam = searchParams.get("amount") || "1";
+    const amountNumber = Number(amountParam);
+    const safeAmount = Number.isFinite(amountNumber) && amountNumber > 0 ? amountNumber : 0;
+    const clickLabel = `${safeAmount} click${safeAmount === 1 ? "" : "s"}`;
     return new ImageResponse(
         (
             <div
@@ -22,8 +25,8 @@ export async function GET(req: Request) {
                     textAlign: "center",
                 }}
             >
-                <div style={{ fontSize: 80, marginBottom: 30 }}>💸</div>
-                <div style={{ fontWeight: "bold", marginBottom: 20 }}>{`I've given $${amount}`}</div>
+                <div style={{ fontSize: 80, marginBottom: 30 }}>🖱️</div>
+                <div style={{ fontWeight: "bold", marginBottom: 20 }}>{`I've logged ${clickLabel}`}</div>
                 <div style={{ fontSize: 36 }}>You should too!</div>
                 <div style={{ fontSize: 24, marginTop: 40, color: "#888" }}>gimme.jrbussard.com</div>
             </div>

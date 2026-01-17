@@ -4,7 +4,7 @@ import ShareClientPage from "./client-page";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function generateMetadata({ params }: any): Promise<Metadata> {
     const amount = params.amount;
-    const title = `I've given $${amount} on gimme.jrbussard.com`;
+    const title = `I've logged ${amount} click${Number(amount) === 1 ? "" : "s"} on gimme.jrbussard.com`;
     const description = "You should too!";
     const url = `https://gimme.jrbussard.com/share/${amount}`;
     const imageUrl = `https://gimme.jrbussard.com/api/og?amount=${amount}`;
